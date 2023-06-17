@@ -25,7 +25,7 @@ app.post('/rooms',(req,res) => {
 });
 
 //Api endpoint for viewing the added rooms
-app.get('/rooms',(req,res) => {
+app.get('/viewrooms',(req,res) => {
     res.json(rooms);
 });
 
@@ -60,7 +60,7 @@ app.post('/booking',(req,res) => {
 });
 
 //API endpoint to list all booked rooms
-app.get('/booking',(req,res) => {
+app.get('/viewbooking',(req,res) => {
     const bookedRooms = bookings.map(booking => {
         const {roomName ,bookedStatus,customerName,date,startTime,endTime} = booking;
         return {roomName ,bookedStatus,customerName,date,startTime,endTime} 
