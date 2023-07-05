@@ -29,34 +29,54 @@ app.get('/viewrooms',(req,res) => {
     res.json(rooms);
 });
 
-//Api endpoint for booking room
-app.post('/booking',(req,res) => {
-    const { customerName,date, startTime, endTime, roomId } = req.body;
-    const room = rooms.find(room =>room.id === roomId);
-    if(!room) {
-        res.status(404).json({error:'Room not Found'});
-        return;
-    }
-    const booking ={
-        id: bookings.length+1,
-        customerName,
-        date,
-        startTime,
-        endTime,
-        roomId,
-        roomName:room.roomName,
-        bookedStatus:true
-    };
+// API endpoint for booking room
+app.post('/booking', (req, res) => {
+  const { customerName, date, startTime, endTime, roomId } = req.body;
+  const room = rooms.find((room) => room.id === roomId);
 
-    bookings.push(booking);
-    const customer = customers.find(cust => 
-        cust.name === customerName);
-        if (customer) {
-            customer.bookings.push(booking);
-        } else {
-            customers.push({ name:customerName,booking:[booking]});
-        }
-        res.json(booking);
+  if (!room) {
+    res.status(404).json({ error: 'Room not Found' });
+    return;
+  }
+
+  const existingBooking = bookings.find(
+    (booking) =>
+      booking.roomId === roomId &&
+      booking.date === date &&
+      (
+        (startTime >= booking.startTime && startTime < booking.endTime) ||
+        (endTime > booking.startTime && endTime <= booking.endTime) ||
+        (startTime <= booking.startTime && endTime >= booking.endTime)
+      )
+  );
+
+  if (existingBooking) {
+    res.status(409).json({ error: 'Room already booked at the specified time' });
+    return;
+  }
+
+  const booking = {
+    id: bookings.length + 1,
+    customerName,
+    date,
+    startTime,
+    endTime,
+    roomId,
+    roomName: room.roomName,
+    bookedStatus: true,
+  };
+
+  bookings.push(booking);
+
+  const customer = customers.find((cust) => cust.name === customerName);
+
+  if (customer) {
+    customer.bookings.push(booking);
+  } else {
+    customers.push({ name: customerName, bookings: [booking] });
+  }
+
+  res.json(booking);
 });
 
 //API endpoint to list all booked rooms
