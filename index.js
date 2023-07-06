@@ -102,7 +102,7 @@ app.get('/customers', (req, res) => {
   });
   
   // API endpoint to list no of times customer booked a room
-  app.get('/customer/:name/bookings', (req, res) => {
+  app.get('/customer/:name', (req, res) => {
     const { name } = req.params;
     const customer = customers.find(cust => cust.name === name);
     if (!customer) {
