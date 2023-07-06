@@ -109,11 +109,13 @@ app.get('/customers', (req, res) => {
       res.status(404).json({ error: 'Customer not found' });
       return;
     }
+    else{
     const customerBookings = customer.bookings.map(booking => {
       const { roomName, date, startTime, endTime, id, bookedStatus, bookingDate } = booking;
       return { name, roomName, date, startTime, endTime, bookingId: id, bookedStatus, bookingDate };
     });
     res.json(customerBookings);
+    }
   });
   
 
