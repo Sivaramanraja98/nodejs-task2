@@ -25,7 +25,7 @@ app.post('/rooms',(req,res) => {
 });
 
 //Api endpoint for viewing the added rooms
-app.get('/viewrooms',(req,res) => {
+app.get('/rooms',(req,res) => {
     res.json(rooms);
 });
 
